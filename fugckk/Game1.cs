@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -16,10 +17,11 @@ public class Game1 : Game
     private Vector2 Direction;
     private float speed;
     private bool shot = false;
-    
-
     private Random random = new();
-
+    private int index = 0;
+    private List<Color> colors = new List<Color> {Color.Black, Color.Red, Color.Blue, Color.Gold, Color.Green,
+        Color.HotPink, Color.Purple, Color.Orange};
+    
     public Game1()
     {
         _graphics = new GraphicsDeviceManager(this);
@@ -29,8 +31,8 @@ public class Game1 : Game
 
     protected override void Initialize()
     {
-        speed = 5f;
-        Direction = new(random.Next(0, 360), random.Next(0, 360));
+        speed = 0.5f;
+        Direction = new(5, 5);
         Velocity = Direction * speed;
         base.Initialize();
     }
@@ -51,11 +53,21 @@ public class Game1 : Game
         
         if(Position.Y < 0 || Position.Y + Size.Y > GraphicsDevice.Viewport.Height)
         { 
-            Velocity.Y = -Velocity.Y;
+            Velocity.Y *= -1;
+            index = random.Next(colors.Count);
+            if (index == index)
+            {
+                index = random.Next(colors.Count);
+            }
             
         } else if (Position.X < 0 || Position.X + Size.X > GraphicsDevice.Viewport.Width)
         {
-            Velocity.X = -Velocity.X;
+            Velocity.X *= -1;
+            index = random.Next(colors.Count);
+            if (index == index)
+            {
+                index = random.Next(colors.Count);
+            }
         }
 
         base.Update(gameTime);
@@ -65,7 +77,7 @@ public class Game1 : Game
     {
         GraphicsDevice.Clear(Color.White);
         _spriteBatch.Begin();
-        _spriteBatch.DrawRectangle(Position, Size, Color.Black,2);
+        _spriteBatch.DrawRectangle(Position, Size, colors[index],2);
         _spriteBatch.End();
         
         base.Draw(gameTime);
